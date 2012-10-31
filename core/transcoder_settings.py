@@ -68,7 +68,7 @@ default_config = {
 
         "list_page_classifier" : {
             "type" : "SvmClassifier",
-            "model_filepath" : "./processor/processor/core/algorithm/classifier/list_page_classifier.svm",
+            "model_filepath" : "classifier/list_page_classifier.svm",
             "features" : ["link_text_ratio", "url_is_filename", "non_link_text_length_high", "large_text_count_high"],
         },
 

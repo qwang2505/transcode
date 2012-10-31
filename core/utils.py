@@ -2,7 +2,7 @@ import copy
 import re
 
 import lxml.html as p
-import processor.core.algorithm.classifier.svmutil as svmutil
+import classifier.svmutil as svmutil
 
 from transcode.utils.misc import remove_space
 
@@ -68,11 +68,11 @@ class Utils(object):
             else:
                 data[key] = value
         return data
- 
+
     @classmethod
     def add_class(cls, node, classname):
         node.set('class', ' '.join((node.get('class', ''), classname)))
-    
+
 
     @classmethod
     def add_default_headers(cls, node):
@@ -92,7 +92,7 @@ class Utils(object):
 
     @classmethod
     def adjust_dom(cls, root):
-        ''' adjust paged dom. 
+        ''' adjust paged dom.
             1. add id for navigationBar
             2. generate shadow node of navigationBar
         '''

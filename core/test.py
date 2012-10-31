@@ -1,7 +1,7 @@
 import sys
 import lxml.html as p
 
-from processor.core.algorithm.transcoder import Transcoder
+from transcoder import Transcoder
 import transcode.utils.misc as misc
 
 url = sys.argv[1]

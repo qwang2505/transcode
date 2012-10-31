@@ -1,18 +1,19 @@
 import urlparse
-import os
 import copy
 
 import lxml.html as p
 
-import processor.core.algorithm.transcoder_settings as settings
-from processor.core.algorithm.utils import Utils
-import transcode.utils.misc as misc
-from processor.core.algorithm.classifiers import ClassifierBase
+import transcoder_settings as settings
+from utils import Utils
+from classifiers import ClassifierBase
 from transcode.utils.misc import remove_space, label_count
 
 class Transcoder(object):
     @classmethod
     def _init_classifiers(cls, config, all_features):
+        '''
+        Init classifiers by settings.
+        '''
         classifiers = {}
         for name, classifier_config in config["classifier_configs"].items():
             classifier = ClassifierBase.create_classifier(name, config["feature_extraction_parameters"], classifier_config, all_features)
@@ -45,7 +46,7 @@ class Transcoder(object):
             return None
 
         #initialize
-        self._all_features.clear() 
+        self._all_features.clear()
 
         #load per site config
         host = urlparse.urlparse(url).netloc
@@ -63,6 +64,7 @@ class Transcoder(object):
 
         #extract head node
         self._head_node = dom.find("head")
+        # add head node?
         if self._head_node is None:
             self._head_node = p.Element("head")
             dom.append(self._head_node)
@@ -73,7 +75,7 @@ class Transcoder(object):
         #post-process
         Utils.add_default_headers(dom)
         Utils.adjust_dom(dom)
-   
+
         #list page classification
         self._classifiers["list_page_classifier"].add_extra("url", url)
         is_list = self._classifiers["list_page_classifier"].classify(dom)
@@ -163,7 +165,7 @@ class Transcoder(object):
             for name in properties:
                 if name in node.attrib:
                     node.attrib.pop(name)
-    
+
     def _change_tag_properties(self, node):
         for name, new_value in self._config["changed_tag_properties"].items():
             old_value = node.get(name, None)
@@ -234,7 +236,7 @@ class Transcoder(object):
         if self._config["operation_switches"]["classify_nodes"]:
             self._classify_nodes(node)
         if self._config["operation_switches"]["mark_link_containers"] and node.tag in self._config["link_containers"]:
-            data = self._mark_link_containers(node)
+            self._mark_link_containers(node)
 
     def _classify_nodes(self, node):
         """
@@ -278,7 +280,7 @@ class Transcoder(object):
     def _shrink_nav_node(self, node):
         for anchor in node.findall('.//a'):
             anchor.tail = None
-    
+
     def _mark_link_containers(self, node):
         features = self._all_features[node]
         if features["text_length"] > 0 and float(features['link_length'])/features["text_length"] > self._config["link_threshold"]:

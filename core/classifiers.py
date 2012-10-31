@@ -3,8 +3,8 @@ import os
 
 import lxml.html as p
 
-import processor.core.algorithm.classifier.svmutil as svmutil
-from processor.core.algorithm.utils import Utils
+import classifier.svmutil as svmutil
+from utils import Utils
 import transcode.utils.misc as misc
 
 class FeatureExtractor(object):
@@ -223,7 +223,7 @@ class LinearClassifier(ClassifierBase):
                 score += features[name] * weight
             else:
                 raise Exception("feature %s not found" % name)
-        
+
         return score
 
 class SvmClassifier(ClassifierBase):
